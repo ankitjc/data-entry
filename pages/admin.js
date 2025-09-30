@@ -168,7 +168,7 @@ export default function AdminPage() {
                         <tbody>
                         {entries.map((entry) => (
                             <tr key={entry.id}>
-                                <td>{entry.user_id}</td>
+                                <td>{entry.user_login_code}</td>
                                 <td>{entry.first_name}</td>
                                 <td>{entry.last_name}</td>
                                 <td>{entry.email}</td>

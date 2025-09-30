@@ -6,9 +6,9 @@ export default async function handler(req, res) {
     switch (method) {
         case "GET": {
             try {
-                const { user_id } = req.query;
+                const { login_code } = req.query;
                 let query = supabase.from("entries").select("*");
-                if (user_id) query = query.eq("user_id", user_id);
+                if (login_code) query = query.eq("login_code", login_code);
 
                 const { data, error } = await query;
                 if (error) throw error;

@@ -34,7 +34,7 @@ export default function UserPage() {
             const { data: entriesData, error: entriesError } = await supabase
                 .from("entries")
                 .select("*")
-                .eq("user_id", userData.id)
+                .eq("login_code", userData.login_code)
                 .order("created_at", { ascending: false });
 
             if (entriesError) return console.error("Entries fetch error:", entriesError.message);
@@ -54,7 +54,7 @@ export default function UserPage() {
         if (!user) return;
         const { data, error } = await supabase
             .from("entries")
-            .insert([{ ...formData, user_id: user.id }])
+            .insert([{ ...formData, user_login_code: user.login_code }])
             .select()
             .single();
 

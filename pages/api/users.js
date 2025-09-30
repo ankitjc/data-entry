@@ -27,8 +27,8 @@ export default async function handler(req, res) {
 
         case "DELETE": {
             try {
-                const { id } = req.query;
-                const { data, error } = await supabase.from("users").delete().eq("id", id);
+                const { login_code } = req.query;
+                const { data, error } = await supabase.from("users").delete().eq("login_code", login_code);
                 if (error) throw error;
                 return res.status(200).json(data);
             } catch (err) {
