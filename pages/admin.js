@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import DataTable from "react-data-table-component";
+import Header from "@/components/Header";
 
 export default function AdminPage() {
     const [users, setUsers] = useState([]);
@@ -110,101 +111,102 @@ export default function AdminPage() {
     ];
 
     return (
-        <div className="container mt-5">
-            <h1 className="mb-4">Admin Dashboard</h1>
-
-            {/* Add User Form */}
-            <button
-                className="btn btn-primary mb-3"
-                onClick={() => setShowUserForm(!showUserForm)}
-            >
-                {showUserForm ? "Cancel" : "Add New User"}
-            </button>
-            {showUserForm && (
-                <form onSubmit={handleUserSubmit} className="card p-3 mb-4 shadow-sm">
-                    <h5 className="card-title mb-3">Add New User</h5>
-                    <div className="row g-2">
-                        <div className="col-md-6">
-                            <input
-                                type="text"
-                                name="first_name"
-                                placeholder="First Name"
-                                className="form-control"
-                                value={userFormData.first_name}
-                                onChange={handleUserChange}
-                                required
-                            />
+        <>
+            <Header title="Admin Dashboard" />
+            <div className="container mt-5">
+                {/* Add User Form */}
+                <button
+                    className="btn btn-primary mb-3"
+                    onClick={() => setShowUserForm(!showUserForm)}
+                >
+                    {showUserForm ? "Cancel" : "Add New User"}
+                </button>
+                {showUserForm && (
+                    <form onSubmit={handleUserSubmit} className="card p-3 mb-4 shadow-sm">
+                        <h5 className="card-title mb-3">Add New User</h5>
+                        <div className="row g-2">
+                            <div className="col-md-6">
+                                <input
+                                    type="text"
+                                    name="first_name"
+                                    placeholder="First Name"
+                                    className="form-control"
+                                    value={userFormData.first_name}
+                                    onChange={handleUserChange}
+                                    required
+                                />
+                            </div>
+                            <div className="col-md-6">
+                                <input
+                                    type="text"
+                                    name="last_name"
+                                    placeholder="Last Name"
+                                    className="form-control"
+                                    value={userFormData.last_name}
+                                    onChange={handleUserChange}
+                                />
+                            </div>
                         </div>
-                        <div className="col-md-6">
-                            <input
-                                type="text"
-                                name="last_name"
-                                placeholder="Last Name"
-                                className="form-control"
-                                value={userFormData.last_name}
-                                onChange={handleUserChange}
-                            />
+
+                        <div className="row g-2 mt-2">
+                            <div className="col-md-6">
+                                <input
+                                    type="email"
+                                    name="email"
+                                    placeholder="Email"
+                                    className="form-control"
+                                    value={userFormData.email}
+                                    onChange={handleUserChange}
+                                />
+                            </div>
+                            <div className="col-md-6">
+                                <input
+                                    type="text"
+                                    name="login_code"
+                                    placeholder="Login Code"
+                                    className="form-control"
+                                    value={userFormData.login_code}
+                                    onChange={handleUserChange}
+                                    required
+                                />
+                            </div>
                         </div>
-                    </div>
 
-                    <div className="row g-2 mt-2">
-                        <div className="col-md-6">
-                            <input
-                                type="email"
-                                name="email"
-                                placeholder="Email"
-                                className="form-control"
-                                value={userFormData.email}
-                                onChange={handleUserChange}
-                            />
-                        </div>
-                        <div className="col-md-6">
-                            <input
-                                type="text"
-                                name="login_code"
-                                placeholder="Login Code"
-                                className="form-control"
-                                value={userFormData.login_code}
-                                onChange={handleUserChange}
-                                required
-                            />
-                        </div>
-                    </div>
+                        <button type="submit" className="btn btn-success mt-3">
+                            Save User
+                        </button>
+                    </form>
+                )}
 
-                    <button type="submit" className="btn btn-success mt-3">
-                        Save User
-                    </button>
-                </form>
-            )}
+                {/* Users Table */}
+                <h2>Users</h2>
+                <DataTable
+                    columns={userColumns}
+                    data={users}
+                    pagination
+                    highlightOnHover
+                    striped
+                />
 
-            {/* Users Table */}
-            <h2>Users</h2>
-            <DataTable
-                columns={userColumns}
-                data={users}
-                pagination
-                highlightOnHover
-                striped
-            />
-
-            {/* Entries Table with Created By Filter */}
-            <h2 className="mt-4">All Entries</h2>
-            <div className="mb-2">
-                <input
-                    type="text"
-                    placeholder="Filter by Created By"
-                    value={createdByFilter}
-                    onChange={(e) => setCreatedByFilter(e.target.value)}
-                    className="form-control"
+                {/* Entries Table with Created By Filter */}
+                <h2 className="mt-4">All Entries</h2>
+                <div className="mb-2">
+                    <input
+                        type="text"
+                        placeholder="Filter by Created By"
+                        value={createdByFilter}
+                        onChange={(e) => setCreatedByFilter(e.target.value)}
+                        className="form-control"
+                    />
+                </div>
+                <DataTable
+                    columns={entryColumns}
+                    data={filteredEntries}
+                    pagination
+                    highlightOnHover
+                    striped
                 />
             </div>
-            <DataTable
-                columns={entryColumns}
-                data={filteredEntries}
-                pagination
-                highlightOnHover
-                striped
-            />
-        </div>
+        </>
     );
 }

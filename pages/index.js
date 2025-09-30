@@ -1,67 +1,61 @@
-import {useState} from "react";
-import {useRouter} from "next/router";
-import {supabase} from "@/lib/supabaseClient";
+import { useState } from "react";
+import { useRouter } from "next/router";
+import Header from "@/components/Header";
 
 export default function LandingPage() {
+    const router = useRouter();
     const [loginCode, setLoginCode] = useState("");
     const [error, setError] = useState("");
-    const router = useRouter();
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        if (loginCode.toLowerCase() === "admin") {
-            await router.push({
-                pathname: "/admin",
-                query: {loginCode: loginCode},
-            });
+        if (!loginCode.trim()) {
+            setError("Please enter your login code");
+            return;
+        }
+        setError("");
+
+        // Redirect based on code
+        if (loginCode === process.env.NEXT_PUBLIC_ADMIN_ID) {
+            router.push(`/admin?loginCode=${loginCode}`);
         } else {
-            // Fetch user by loginCode
-            const {data: user, error} = await supabase
-                .from("users")
-                .select("*")
-                .eq("login_code", loginCode)
-                .single();
-
-            if (error || !user) {
-                setError("Invalid login code");
-                return;
-            }
-
-            await router.push({
-                pathname: "/users",
-                query: {loginCode: loginCode},
-            });
+            router.push(`/users?loginCode=${loginCode}`);
         }
     };
 
     return (
-        <div className="container d-flex flex-column justify-content-center align-items-center vh-100">
-            <div className="card p-5 shadow" style={{maxWidth: "400px", width: "100%"}}>
-                <h2 className="mb-4 text-center">Welcome to Hishobnis</h2>
+        <>
+            <Header title="Data Entry Dashboard" />
+            <div className="min-vh-100 d-flex flex-column">
+                {/* Centered Login */}
+                <main className="flex-grow-1 d-flex justify-content-center align-items-center">
+                    <div className="card shadow p-5" style={{ maxWidth: "400px", width: "100%" }}>
+                        {error && <div className="alert alert-danger">{error}</div>}
 
-                {error && <div className="alert alert-danger">{error}</div>}
+                        <form onSubmit={handleSubmit}>
+                            <div className="mb-3">
+                                <label htmlFor="loginCode" className="form-label">
+                                    Login Code
+                                </label>
+                                <input
+                                    type="text"
+                                    id="loginCode"
+                                    className="form-control"
+                                    value={loginCode}
+                                    onChange={(e) => setLoginCode(e.target.value)}
+                                    required
+                                    placeholder="Enter your login code"
+                                />
+                            </div>
 
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-3">
-                        <label htmlFor="loginCode" className="form-label">
-                            Login Code
-                        </label>
-                        <input
-                            type="text"
-                            id="loginCode"
-                            className="form-control"
-                            value={loginCode}
-                            onChange={(e) => setLoginCode(e.target.value)}
-                            required
-                            placeholder="Enter your login code"
-                        />
+                            <button type="submit" className="btn btn-primary w-100">
+                                Login
+                            </button>
+                        </form>
                     </div>
-
-                    <button type="submit" className="btn btn-primary w-100">
-                        Login
-                    </button>
-                </form>
+                </main>
             </div>
-        </div>
+        </>
+
     );
 }

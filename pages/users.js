@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/router";
 import DataTable from "react-data-table-component";
+import Header from "@/components/Header";
 
 export default function UserPage() {
     const router = useRouter();
@@ -86,78 +87,80 @@ export default function UserPage() {
     ];
 
     return (
-        <div className="container mt-5">
-            <h1 className="mb-4">Your Entries</h1>
+        <>
+            <Header title="Entry Dashboard" />
+            <div className="container mt-5">
+                <button className="btn btn-primary mb-3" onClick={() => setShowForm(!showForm)}>
+                    {showForm ? "Cancel" : "Add New Entry"}
+                </button>
 
-            <button className="btn btn-primary mb-3" onClick={() => setShowForm(!showForm)}>
-                {showForm ? "Cancel" : "Add New Entry"}
-            </button>
-
-            {showForm && (
-                <form onSubmit={handleSubmit} className="card p-3 mb-4 shadow-sm">
-                    <div className="row g-2">
-                        <div className="col-md-6">
-                            <input
-                                type="text"
-                                name="first_name"
-                                placeholder="First Name"
-                                className="form-control"
-                                value={formData.first_name}
-                                onChange={handleChange}
-                                required
-                            />
+                {showForm && (
+                    <form onSubmit={handleSubmit} className="card p-3 mb-4 shadow-sm">
+                        <div className="row g-2">
+                            <div className="col-md-6">
+                                <input
+                                    type="text"
+                                    name="first_name"
+                                    placeholder="First Name"
+                                    className="form-control"
+                                    value={formData.first_name}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                            <div className="col-md-6">
+                                <input
+                                    type="text"
+                                    name="last_name"
+                                    placeholder="Last Name"
+                                    className="form-control"
+                                    value={formData.last_name}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
                         </div>
-                        <div className="col-md-6">
-                            <input
-                                type="text"
-                                name="last_name"
-                                placeholder="Last Name"
-                                className="form-control"
-                                value={formData.last_name}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                    </div>
 
-                    <div className="row g-2 mt-2">
-                        <div className="col-md-6">
-                            <input
-                                type="email"
-                                name="email"
-                                placeholder="Email"
-                                className="form-control"
-                                value={formData.email}
-                                onChange={handleChange}
-                            />
+                        <div className="row g-2 mt-2">
+                            <div className="col-md-6">
+                                <input
+                                    type="email"
+                                    name="email"
+                                    placeholder="Email"
+                                    className="form-control"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div className="col-md-6">
+                                <input
+                                    type="text"
+                                    name="phone"
+                                    placeholder="Phone"
+                                    className="form-control"
+                                    value={formData.phone}
+                                    onChange={handleChange}
+                                />
+                            </div>
                         </div>
-                        <div className="col-md-6">
-                            <input
-                                type="text"
-                                name="phone"
-                                placeholder="Phone"
-                                className="form-control"
-                                value={formData.phone}
-                                onChange={handleChange}
-                            />
-                        </div>
-                    </div>
 
-                    <button type="submit" className="btn btn-success mt-3">
-                        Save Entry
-                    </button>
-                </form>
-            )}
+                        <button type="submit" className="btn btn-success mt-3">
+                            Save Entry
+                        </button>
+                    </form>
+                )}
 
-            <h2>Entries List</h2>
-            <DataTable
-                columns={columns}
-                data={entries}
-                pagination
-                highlightOnHover
-                dense
-                responsive
-            />
-        </div>
+                <h4>Entries List</h4>
+                <DataTable
+                    columns={columns}
+                    data={entries}
+                    pagination
+                    highlightOnHover
+                    dense
+                    responsive
+                />
+            </div>
+        </>
+
     );
 }
